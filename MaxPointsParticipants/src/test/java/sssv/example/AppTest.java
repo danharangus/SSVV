@@ -82,8 +82,17 @@ public class AppTest
      * Test adding an existing student
      */
     public void testAddExistingStudent() {
+        String expectedMessage = "Invalid student details";
         Student student1 = new Student("1", "GhitaInvalid", 933, "ghita@ghita.com"); // Adjust constructor as necessary
-        doThrow(new ValidationException("Invalid student details")).when(studentValidator).validate(student1);
-        
+        doThrow(new ValidationException(expectedMessage)).when(studentValidator).validate(student1);
+        try {
+            // Act
+            service.addStudent(student1);
+            // Assert failure if the above method call does not throw the exception
+            fail("Expected a ValidationException to be thrown");
+        } catch (ValidationException e) {
+            // Assert that the thrown exception is what we expect
+            assertEquals(expectedMessage, e.getMessage());
+        }
     }
 }
